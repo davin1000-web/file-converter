@@ -24,59 +24,73 @@ COUPANG_LINKS = {
 # 배너 정보 설정
 AD_BANNERS = {
     "이미지": [
-        {"text": "📸 사진 작업 필수템! 가성비 외장하드 보러가기", "link": COUPANG_LINKS["이미지_외장하드"]},
-        {"text": "💾 대용량 SD카드 특가! 사진 저장 걱정 끝", "link": COUPANG_LINKS["이미지_SD카드"]},
+        {
+            "title": "사진 작업 필수템",
+            "subtitle": "가성비 외장하드 추천",
+            "icon": "💾",
+            "link": COUPANG_LINKS["이미지_외장하드"]
+        },
+        {
+            "title": "대용량 SD카드 특가",
+            "subtitle": "사진 저장 걱정 끝",
+            "icon": "📸",
+            "link": COUPANG_LINKS["이미지_SD카드"]
+        },
     ],
     "엑셀": [
-        {"text": "⌨️ 엑셀 작업 효율 UP! 인기 기계식 키보드", "link": COUPANG_LINKS["엑셀_키보드"]},
-        {"text": "🖥️ 눈 편한 대화면 모니터로 업무 효율 높이기", "link": COUPANG_LINKS["엑셀_모니터"]},
+        {
+            "title": "업무 효율 UP",
+            "subtitle": "인기 기계식 키보드",
+            "icon": "⌨️",
+            "link": COUPANG_LINKS["엑셀_키보드"]
+        },
+        {
+            "title": "눈이 편한 대화면",
+            "subtitle": "모니터 베스트셀러",
+            "icon": "🖥️",
+            "link": COUPANG_LINKS["엑셀_모니터"]
+        },
     ],
 }
 
 
 def show_context_ad(tab_type: str):
-    """탭에 맞는 문맥 광고를 표시합니다."""
+    """탭에 맞는 프리미엄 문맥 광고를 표시합니다."""
     if tab_type in AD_BANNERS:
         ad = random.choice(AD_BANNERS[tab_type])
         st.markdown(
             f"""
-            <div style="
-                background: #FFF9E6;
-                border: 1px solid #FFD700;
-                padding: 12px 15px;
-                border-radius: 8px;
-                margin: 10px 0;
-                text-align: center;
-            ">
-                <a href="{ad['link']}" target="_blank" style="color: #333; text-decoration: none; font-weight: 500;">
-                    {ad['text']} →
-                </a>
-                <span style="color: #999; font-size: 11px; margin-left: 8px;">[광고]</span>
-            </div>
+            <a href="{ad['link']}" target="_blank" style="text-decoration: none;">
+                <div class="premium-ad-card">
+                    <div class="ad-icon">{ad['icon']}</div>
+                    <div class="ad-content">
+                        <div class="ad-title">{ad['title']}</div>
+                        <div class="ad-subtitle">{ad['subtitle']}</div>
+                    </div>
+                    <div class="ad-arrow">→</div>
+                    <span class="ad-badge">AD</span>
+                </div>
+            </a>
             """,
             unsafe_allow_html=True
         )
 
 
 def show_loading_ad(tab_type: str):
-    """로딩 중 광고를 표시합니다."""
+    """로딩 중 프리미엄 광고를 표시합니다."""
     if tab_type in AD_BANNERS:
         ad = random.choice(AD_BANNERS[tab_type])
         st.markdown(
             f"""
-            <div style="
-                background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
-                border-left: 4px solid #667eea;
-                padding: 12px 15px;
-                border-radius: 0 8px 8px 0;
-                margin: 10px 0;
-            ">
-                <p style="margin: 0; color: #666; font-size: 13px;">
-                    ⏳ 기다리는 동안...<br>
-                    <a href="{ad['link']}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 600;">
-                        {ad['text']}
-                    </a>
-                </p>
+            <div class="loading-ad-container">
+                <div class="loading-ad-label">⏳ 잠시만 기다려주세요</div>
+                <a href="{ad['link']}" target="_blank" style="text-decoration: none;">
+                    <div class="loading-ad-card">
+                        <span class="loading-ad-icon">{ad['icon']}</span>
+                        <span class="loading-ad-text">{ad['title']} · {ad['subtitle']}</span>
+                        <span class="loading-ad-cta">확인하기 →</span>
+                    </div>
+                </a>
             </div>
             """,
             unsafe_allow_html=True
@@ -109,35 +123,368 @@ st.markdown("""
 # 커스텀 CSS
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
+    /* ==================== 전체 레이아웃 ==================== */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    
+    /* ==================== 메인 헤더 ==================== */
+    .main-header-container {
         text-align: center;
-        padding: 1rem 0;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem 1rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    
+    .main-logo {
+        font-size: 4rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .main-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 2rem;
+        background-clip: text;
+        margin: 0;
     }
-    .sub-header {
-        text-align: center;
+    
+    .main-subtitle {
         color: #666;
-        margin-bottom: 2rem;
+        font-size: 1rem;
+        font-weight: 400;
+        margin-top: 0.5rem;
     }
+    
+    .main-badges {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .badge {
+        background: white;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        color: #555;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .badge-icon {
+        font-size: 1rem;
+    }
+    
+    /* ==================== 탭 스타일 ==================== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 24px;
+        gap: 8px;
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 16px;
+        justify-content: center;
     }
+    
     .stTabs [data-baseweb="tab"] {
+        height: 48px;
+        padding: 0 24px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        background: transparent;
+        border: none;
+        color: #666;
+        transition: all 0.2s ease;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: white;
+        color: #333;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: white !important;
+        color: #667eea !important;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+    }
+    
+    .stTabs [data-baseweb="tab-highlight"] {
+        display: none;
+    }
+    
+    .stTabs [data-baseweb="tab-border"] {
+        display: none;
+    }
+    
+    /* ==================== 프리미엄 광고 카드 ==================== */
+    .premium-ad-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, #fafbfc 0%, #f0f2f5 100%);
+        border: 1px solid #e8eaed;
+        padding: 16px 20px;
+        border-radius: 14px;
+        margin: 16px 0;
+        position: relative;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .premium-ad-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        border-color: #667eea;
+    }
+    
+    .ad-icon {
+        font-size: 2rem;
+        width: 50px;
         height: 50px;
-        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .ad-content {
+        flex: 1;
+    }
+    
+    .ad-title {
         font-weight: 600;
+        color: #333;
+        font-size: 0.95rem;
+    }
+    
+    .ad-subtitle {
+        color: #888;
+        font-size: 0.85rem;
+        margin-top: 2px;
+    }
+    
+    .ad-arrow {
+        color: #667eea;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .ad-badge {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-size: 0.65rem;
+        color: #aaa;
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+    
+    /* ==================== 로딩 광고 ==================== */
+    .loading-ad-container {
+        margin: 16px 0;
+    }
+    
+    .loading-ad-label {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 8px;
+    }
+    
+    .loading-ad-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(90deg, #667eea08 0%, #764ba208 100%);
+        border: 1px dashed #667eea40;
+        padding: 14px 18px;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+    }
+    
+    .loading-ad-card:hover {
+        background: linear-gradient(90deg, #667eea15 0%, #764ba215 100%);
+        border-style: solid;
+    }
+    
+    .loading-ad-icon {
+        font-size: 1.3rem;
+    }
+    
+    .loading-ad-text {
+        flex: 1;
+        color: #555;
+        font-size: 0.9rem;
+    }
+    
+    .loading-ad-cta {
+        color: #667eea;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    /* ==================== 섹션 헤더 ==================== */
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f2f5;
+    }
+    
+    .section-icon {
+        font-size: 1.8rem;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border-radius: 14px;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+    
+    .section-desc {
+        color: #888;
+        font-size: 0.9rem;
+        margin: 4px 0 0 0;
+    }
+    
+    /* ==================== 버튼 스타일 ==================== */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 32px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stDownloadButton > button {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 14px 32px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+    }
+    
+    .stDownloadButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+    }
+    
+    /* ==================== 파일 업로더 ==================== */
+    .stFileUploader > div > div {
+        border: 2px dashed #e0e0e0;
+        border-radius: 16px;
+        background: #fafbfc;
+        transition: all 0.2s ease;
+    }
+    
+    .stFileUploader > div > div:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+    
+    /* ==================== 카드 스타일 ==================== */
+    .info-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        border: 1px solid #f0f2f5;
+    }
+    
+    /* ==================== 푸터 ==================== */
+    .premium-footer {
+        text-align: center;
+        padding: 2rem;
+        margin-top: 3rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8eaed 100%);
+        border-radius: 20px;
+    }
+    
+    .footer-text {
+        color: #888;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    .footer-brand {
+        color: #667eea;
+        font-weight: 600;
+    }
+    
+    /* ==================== 성공/정보 메시지 ==================== */
+    .stSuccess {
+        background: linear-gradient(135deg, #11998e10 0%, #38ef7d10 100%);
+        border: 1px solid #38ef7d50;
+        border-radius: 12px;
+    }
+    
+    .stInfo {
+        background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+        border: 1px solid #667eea30;
+        border-radius: 12px;
+    }
+    
+    /* ==================== 데이터프레임 ==================== */
+    .stDataFrame {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # 메인 헤더
-st.markdown('<h1 class="main-header">🔄 만능 파일 변환기</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">이미지와 데이터 파일을 손쉽게 변환하세요!</p>', unsafe_allow_html=True)
+st.markdown("""
+<div class="main-header-container">
+    <div class="main-logo">🔄</div>
+    <h1 class="main-title">만능 파일 변환기</h1>
+    <p class="main-subtitle">이미지와 데이터 파일을 손쉽게 변환하세요</p>
+    <div class="main-badges">
+        <div class="badge"><span class="badge-icon">⚡</span> 초고속 변환</div>
+        <div class="badge"><span class="badge-icon">🔒</span> 100% 안전</div>
+        <div class="badge"><span class="badge-icon">💰</span> 완전 무료</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 def convert_image(image_bytes: bytes, original_format: str, target_format: str) -> bytes:
@@ -213,8 +560,15 @@ tab1, tab2 = st.tabs(["🖼️ 이미지 변환소", "📊 엑셀/데이터 변�
 
 # ==================== 탭 1: 이미지 변환소 ====================
 with tab1:
-    st.header("🖼️ 이미지 변환소")
-    st.markdown("PNG, JPG, JPEG, WEBP 이미지를 원하는 형식으로 변환하세요.")
+    st.markdown("""
+    <div class="section-header">
+        <div class="section-icon">🖼️</div>
+        <div>
+            <h2 class="section-title">이미지 변환소</h2>
+            <p class="section-desc">PNG, JPG, JPEG, WEBP 이미지를 원하는 형식으로 변환하세요</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # 문맥 광고 배너
     show_context_ad("이미지")
@@ -346,8 +700,15 @@ with tab1:
 
 # ==================== 탭 2: 엑셀/데이터 변환소 ====================
 with tab2:
-    st.header("📊 엑셀/데이터 변환소")
-    st.markdown("CSV와 Excel 파일을 서로 변환하세요.")
+    st.markdown("""
+    <div class="section-header">
+        <div class="section-icon">📊</div>
+        <div>
+            <h2 class="section-title">엑셀/데이터 변환소</h2>
+            <p class="section-desc">CSV와 Excel 파일을 서로 변환하세요</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # 문맥 광고 배너
     show_context_ad("엑셀")
@@ -441,13 +802,16 @@ with tab2:
 
 
 # 푸터
-st.markdown("---")
-st.markdown(
-    """
-    <div style="text-align: center; color: #888; padding: 1rem;">
-        <p>💡 <strong>Tip:</strong> 이 앱은 모든 파일 처리를 메모리에서 수행하여 빠르고 안전합니다.</p>
-        <p>Made with ❤️ using Streamlit</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""                                                                                                                                           
+<div class="premium-footer">
+    <p class="footer-text">
+        ⚡ 모든 파일은 메모리에서만 처리되어 <strong>빠르고 안전</strong>합니다
+    </p>
+    <p class="footer-text" style="margin-top: 8px;">
+        Made with ❤️ by <span class="footer-brand">File Converter</span>
+    </p>
+    <p class="footer-text" style="margin-top: 12px; font-size: 0.75rem; color: #aaa;">
+        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+    </p>
+</div>
+""", unsafe_allow_html=True)
