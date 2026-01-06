@@ -15,11 +15,10 @@ import random
 # ==================== 쿠팡 파트너스 설정 ====================
 # 아래 링크를 본인의 쿠팡 파트너스 링크로 교체하세요!
 COUPANG_LINKS = {
-    "이미지_외장하드": "https://link.coupang.com/YOUR_LINK_HERE_1",
-    "이미지_SD카드": "https://link.coupang.com/YOUR_LINK_HERE_2",
-    "엑셀_키보드": "https://link.coupang.com/YOUR_LINK_HERE_3",
-    "엑셀_모니터": "https://link.coupang.com/YOUR_LINK_HERE_4",
-    "일반_후원": "https://link.coupang.com/YOUR_LINK_HERE_5",
+    "이미지_외장하드": "https://link.coupang.com/a/dmmJ15",
+    "이미지_SD카드": "https://link.coupang.com/a/dmmMov",
+    "엑셀_키보드": "https://link.coupang.com/a/dmmOeD",
+    "엑셀_모니터": "https://link.coupang.com/a/dmmRD1",
 }
 
 # 배너 정보 설정
@@ -33,32 +32,6 @@ AD_BANNERS = {
         {"text": "🖥️ 눈 편한 대화면 모니터로 업무 효율 높이기", "link": COUPANG_LINKS["엑셀_모니터"]},
     ],
 }
-
-
-def show_support_banner():
-    """후원 배너를 표시합니다."""
-    st.markdown(
-        f"""
-        <div style="
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            text-align: center;
-        ">
-            <p style="color: white; margin: 0; font-size: 14px;">
-                💝 이 서비스가 도움이 되셨나요?<br>
-                <a href="{COUPANG_LINKS['일반_후원']}" target="_blank" style="color: #FFD700; text-decoration: none; font-weight: bold;">
-                    👉 쿠팡 방문으로 서버 비용 후원하기 (비용 0원)
-                </a>
-            </p>
-            <p style="color: rgba(255,255,255,0.7); margin: 5px 0 0 0; font-size: 11px;">
-                이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 
 def show_context_ad(tab_type: str):
@@ -342,8 +315,6 @@ with tab1:
                         mime=f"image/{target_format.lower()}",
                         use_container_width=True
                     )
-                    # 후원 배너
-                    show_support_banner()
                 else:
                     # 여러 파일: ZIP으로 압축 다운로드
                     zip_data = create_zip_from_files(converted_files)
@@ -357,9 +328,6 @@ with tab1:
                         mime="application/zip",
                         use_container_width=True
                     )
-                    
-                    # 후원 배너
-                    show_support_banner()
                     
                     # 개별 다운로드 옵션
                     with st.expander("📂 개별 파일 다운로드"):
@@ -461,9 +429,6 @@ with tab2:
                             mime=mime_type,
                             use_container_width=True
                         )
-                        
-                        # 후원 배너
-                        show_support_banner()
                         
                     except Exception as e:
                         st.error("⚠️ 변환 중 문제가 발생했습니다. 파일 형식을 확인해 주세요.")
