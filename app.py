@@ -11,12 +11,28 @@ import zipfile
 from datetime import datetime
 
 
+# Google 인증 파일 제공
+query_params = st.query_params
+if "google-verification" in query_params:
+    st.markdown("google-site-verification: google2abad1d81a343e2b.html", unsafe_allow_html=True)
+    st.stop()
+
 # 페이지 설정
 st.set_page_config(
     page_title="만능 파일 변환기",
     page_icon="🔄",
     layout="wide"
 )
+
+# Google Site Verification 메타 태그를 head에 동적으로 추가
+st.markdown("""
+<script>
+    var meta = document.createElement('meta');
+    meta.name = 'google-site-verification';
+    meta.content = 'hhGxSnXxIruu9q1nPuyZ1b5upZB0dznXuhpCJfl01LY';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+</script>
+""", unsafe_allow_html=True)
 
 # 커스텀 CSS
 st.markdown("""
