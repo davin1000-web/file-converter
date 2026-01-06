@@ -9,6 +9,105 @@ from PIL import Image
 import io
 import zipfile
 from datetime import datetime
+import random
+
+
+# ==================== 쿠팡 파트너스 설정 ====================
+# 아래 링크를 본인의 쿠팡 파트너스 링크로 교체하세요!
+COUPANG_LINKS = {
+    "이미지_외장하드": "https://link.coupang.com/YOUR_LINK_HERE_1",
+    "이미지_SD카드": "https://link.coupang.com/YOUR_LINK_HERE_2",
+    "엑셀_키보드": "https://link.coupang.com/YOUR_LINK_HERE_3",
+    "엑셀_모니터": "https://link.coupang.com/YOUR_LINK_HERE_4",
+    "일반_후원": "https://link.coupang.com/YOUR_LINK_HERE_5",
+}
+
+# 배너 정보 설정
+AD_BANNERS = {
+    "이미지": [
+        {"text": "📸 사진 작업 필수템! 가성비 외장하드 보러가기", "link": COUPANG_LINKS["이미지_외장하드"]},
+        {"text": "💾 대용량 SD카드 특가! 사진 저장 걱정 끝", "link": COUPANG_LINKS["이미지_SD카드"]},
+    ],
+    "엑셀": [
+        {"text": "⌨️ 엑셀 작업 효율 UP! 인기 기계식 키보드", "link": COUPANG_LINKS["엑셀_키보드"]},
+        {"text": "🖥️ 눈 편한 대화면 모니터로 업무 효율 높이기", "link": COUPANG_LINKS["엑셀_모니터"]},
+    ],
+}
+
+
+def show_support_banner():
+    """후원 배너를 표시합니다."""
+    st.markdown(
+        f"""
+        <div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        ">
+            <p style="color: white; margin: 0; font-size: 14px;">
+                💝 이 서비스가 도움이 되셨나요?<br>
+                <a href="{COUPANG_LINKS['일반_후원']}" target="_blank" style="color: #FFD700; text-decoration: none; font-weight: bold;">
+                    👉 쿠팡 방문으로 서버 비용 후원하기 (비용 0원)
+                </a>
+            </p>
+            <p style="color: rgba(255,255,255,0.7); margin: 5px 0 0 0; font-size: 11px;">
+                이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+def show_context_ad(tab_type: str):
+    """탭에 맞는 문맥 광고를 표시합니다."""
+    if tab_type in AD_BANNERS:
+        ad = random.choice(AD_BANNERS[tab_type])
+        st.markdown(
+            f"""
+            <div style="
+                background: #FFF9E6;
+                border: 1px solid #FFD700;
+                padding: 12px 15px;
+                border-radius: 8px;
+                margin: 10px 0;
+                text-align: center;
+            ">
+                <a href="{ad['link']}" target="_blank" style="color: #333; text-decoration: none; font-weight: 500;">
+                    {ad['text']} →
+                </a>
+                <span style="color: #999; font-size: 11px; margin-left: 8px;">[광고]</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+
+def show_loading_ad(tab_type: str):
+    """로딩 중 광고를 표시합니다."""
+    if tab_type in AD_BANNERS:
+        ad = random.choice(AD_BANNERS[tab_type])
+        st.markdown(
+            f"""
+            <div style="
+                background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+                border-left: 4px solid #667eea;
+                padding: 12px 15px;
+                border-radius: 0 8px 8px 0;
+                margin: 10px 0;
+            ">
+                <p style="margin: 0; color: #666; font-size: 13px;">
+                    ⏳ 기다리는 동안...<br>
+                    <a href="{ad['link']}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                        {ad['text']}
+                    </a>
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
 # Google 인증 파일 제공
@@ -144,6 +243,9 @@ with tab1:
     st.header("🖼️ 이미지 변환소")
     st.markdown("PNG, JPG, JPEG, WEBP 이미지를 원하는 형식으로 변환하세요.")
     
+    # 문맥 광고 배너
+    show_context_ad("이미지")
+    
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -193,6 +295,11 @@ with tab1:
             progress_bar = st.progress(0)
             status_text = st.empty()
             
+            # 로딩 중 광고 표시
+            loading_ad_placeholder = st.empty()
+            with loading_ad_placeholder.container():
+                show_loading_ad("이미지")
+            
             for idx, img_file in enumerate(uploaded_images):
                 try:
                     status_text.text(f"변환 중... ({idx + 1}/{len(uploaded_images)}) - {img_file.name}")
@@ -217,6 +324,7 @@ with tab1:
             
             status_text.empty()
             progress_bar.empty()
+            loading_ad_placeholder.empty()
             
             if converted_files:
                 st.success(f"✅ {len(converted_files)}개의 파일이 성공적으로 변환되었습니다!")
@@ -234,6 +342,8 @@ with tab1:
                         mime=f"image/{target_format.lower()}",
                         use_container_width=True
                     )
+                    # 후원 배너
+                    show_support_banner()
                 else:
                     # 여러 파일: ZIP으로 압축 다운로드
                     zip_data = create_zip_from_files(converted_files)
@@ -247,6 +357,9 @@ with tab1:
                         mime="application/zip",
                         use_container_width=True
                     )
+                    
+                    # 후원 배너
+                    show_support_banner()
                     
                     # 개별 다운로드 옵션
                     with st.expander("📂 개별 파일 다운로드"):
@@ -267,6 +380,9 @@ with tab1:
 with tab2:
     st.header("📊 엑셀/데이터 변환소")
     st.markdown("CSV와 Excel 파일을 서로 변환하세요.")
+    
+    # 문맥 광고 배너
+    show_context_ad("엑셀")
     
     # 파일 업로드
     uploaded_data = st.file_uploader(
@@ -345,6 +461,9 @@ with tab2:
                             mime=mime_type,
                             use_container_width=True
                         )
+                        
+                        # 후원 배너
+                        show_support_banner()
                         
                     except Exception as e:
                         st.error("⚠️ 변환 중 문제가 발생했습니다. 파일 형식을 확인해 주세요.")
